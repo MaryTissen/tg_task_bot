@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/MaryTissen/tg_task_bot/internal/command"
+	"github.com/MaryTissen/tg_task_bot/internal/edit"
 	"github.com/MaryTissen/tg_task_bot/internal/task"
 	"github.com/MaryTissen/tg_task_bot/internal/tasks"
 	"github.com/MaryTissen/tg_task_bot/internal/user"
@@ -37,6 +38,9 @@ func main() {
 	users := users.Users{
 		UsersMap: make(map[int]user.User),
 	}
+	tasks_edit := edit.Edit{
+		EditMap: make(map[int]int),
+	}
 
 	for update := range updates {
 		if update.Message == nil {
@@ -45,7 +49,7 @@ func main() {
 
 		_, ok := users.UsersMap[update.Message.From.ID]
 		if !ok {
-			users.UsersMap[update.Message.From.ID] = user.User{ //метод
+			users.UsersMap[update.Message.From.ID] = user.User{
 				UserID:         update.Message.From.ID,
 				UserCurCommand: 0,
 				UserNumOfTasks: 0,
@@ -53,20 +57,20 @@ func main() {
 		}
 
 		switch update.Message.Command() {
-		//case "help":
-		//helpCommand() 1
+		case "help":
+			command.HelpCommand(bot, update.Message) //key command = 1
 		case "new":
 			command.NewCommand(bot, update.Message, &tasks, &users) //key command = 2
-			//case "edit":
-			//editCommand()
+		case "edit":
+			command.EditCommand(bot, update.Message, &tasks, &users) //key command = 3
 			//case "delete":
 			//deleteCommand()
 		case "get":
 			command.GetCommand(bot, update.Message, &tasks, &users) //key command = 5
-			//case "list":
-			//listCommand()
+		case "list":
+			command.ListCommand(bot, update.Message, &tasks, &users) //key command = 6
 		default:
-			command.HandleMessage(bot, update.Message, &tasks, &users)
+			command.HandleMessage(bot, update.Message, &tasks, &users, &tasks_edit)
 		}
 	}
 }

@@ -54,15 +54,15 @@ func main() {
 
 		switch update.Message.Command() {
 		//case "help":
-		//helpCommand()
+		//helpCommand() 1
 		case "new":
-			command.NewCommand(bot, update.Message, &tasks, &users)
+			command.NewCommand(bot, update.Message, &tasks, &users) //key command = 2
 			//case "edit":
 			//editCommand()
 			//case "delete":
 			//deleteCommand()
-			//case "get":
-			//getCommand()
+		case "get":
+			command.GetCommand(bot, update.Message, &tasks, &users) //key command = 5
 			//case "list":
 			//listCommand()
 		default:
